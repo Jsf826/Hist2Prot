@@ -6,6 +6,7 @@ The method integrates cell-level morphology, cell–cell spatial topology, and m
 Framework Overview  
 ![GitHub Logo](https://github.com/Jsf826/Hist2Prot/tree/main/Figures/1.jpg)
 
+![1](https://github.com/user-attachments/assets/9d53dedf-a5ca-45ce-925e-3faacb3fc1e4)
 
 
 Repository Structure
