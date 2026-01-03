@@ -39,7 +39,7 @@ Cell segmentation is performed externally (e.g., HoVerNet).
 Histo2Prot does not include segmentation inference, and directly reads segmentation results.
 
 
-Quality Control (QC)
+Quality Control (QC)  
 
 The preprocessing pipeline follows these steps:
 
@@ -60,15 +60,15 @@ Low-information regions
 The resulting paired H&E patches + single-cell protein profiles form the final dataset.
 
 
-Training
+Training  
 Step 1: Install Dependencies
 pip install -r requirements.txt
 
-Step 2: Run Training
+Step 2: Run Training  
 python train.py
 
 
-The training script includes:
+The training script includes:  
 
 Multi-task loss optimization
 
@@ -85,7 +85,7 @@ Training loss curves
 Hyperparameter configuration (YAML)
 
 
-Inference
+Inference  
 
 After training, you can predict spatial proteomics on new H&E slides:
 
@@ -104,7 +104,7 @@ Cell-level protein expression predictions
 
 
 
-Requirements
+Requirements  
 
 Key dependencies include:
 
