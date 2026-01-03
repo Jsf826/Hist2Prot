@@ -8,11 +8,11 @@ Repository Structure
 
 Histo2Prot/
 │
-├── DataProcess.py        # Data preprocessing & QC
-├── model.py              # CNN + GCN + Fusion + Heads
-├── train.py              # Training script
-├── inference.py          # Inference / prediction script
-├── requirements.txt      # Python dependencies
+├── DataProcess.py       
+├── model.py             
+├── train.py    
+├── inference.py    
+├── requirements.txt 
 └── README.md
 
 
