@@ -4,7 +4,7 @@ Histo2Prot is a deep learning framework for inferring single-cell–resolved spa
 The method integrates cell-level morphology, cell–cell spatial topology, and multi-task learning to reconstruct protein expression landscapes across the tumor microenvironment (TME).
 
 **Framework Overview**
-<img src="Figures/FIgure1.svg" width="50%">
+<img src="Figures/FIgure1.svg" width="70%">
 
 
 **Repository Structure**
