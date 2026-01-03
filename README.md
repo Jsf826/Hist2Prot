@@ -6,8 +6,7 @@ The method integrates cell-level morphology, cell–cell spatial topology, and m
 
 Repository Structure
 
-Histo2Prot/
-│
+Histo2Prot
 ├── DataProcess.py       
 ├── model.py             
 ├── train.py    
