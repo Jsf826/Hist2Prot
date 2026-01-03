@@ -40,7 +40,7 @@ Single-cell protein expression matrix
 Used as regression targets during training
 
 Note
-Cell segmentation is performed externally (e.g., HoVerNet).
+Cell segmentation is performed externally (HoVerNet).  
 Histo2Prot does not include segmentation inference, and directly reads segmentation results.
 
 
