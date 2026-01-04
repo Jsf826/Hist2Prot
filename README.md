@@ -5,7 +5,7 @@ The method integrates cell-level morphology, cell–cell spatial topology, and m
 
 **Framework Overview**  
 <div align="center">
-  <img src="Figures/Figure1.svg" width="70%">
+  <img src="Figures/Figure.svg" width="80%">
 </div>
 
 
