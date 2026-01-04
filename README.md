@@ -1,6 +1,6 @@
 **AI-enabled Virtual Spatial Proteomics of Single-Cell Tumor Microenvironment from Histology**
 
-Histo2Prot is a deep learning framework for inferring single-cell–resolved spatial proteomic profiles from routine whole-slide histopathology (H&E) images.
+We present an AI-enabled virtual spatial proteomics framework (Hist2Prot) designed to computationally generate single-cell–resolved spatial proteomic profiles directly from standard hematoxylin and eosin (H\&E) histopathology slides.
 The method integrates cell-level morphology, cell–cell spatial topology, and multi-task learning to reconstruct protein expression landscapes across the tumor microenvironment (TME).
 
 **Framework Overview**  
