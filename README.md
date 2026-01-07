@@ -34,7 +34,7 @@ Histo2Prot/
 
 
 
-📦 Data Preparation
+##📦 Data Preparation
 Input Data
 
 Whole-slide H&E images
@@ -59,7 +59,7 @@ Hist2Prot does not include a segmentation inference module
 
 Segmentation results are directly consumed as input
 
-🧪 Quality Control and Preprocessing
+##🧪 Quality Control and Preprocessing
 
 H&E staining:
 
@@ -87,7 +87,7 @@ Paired H&E patches
 
 Corresponding single-cell protein expression profiles
 
-🚀 Training
+##🚀 Training
 Step 1: Install Dependencies
 pip install -r requirements.txt
 
@@ -115,7 +115,7 @@ Training loss curves
 
 Hyperparameter configurations (YAML)
 
-🔍 Inference
+##🔍 Inference
 python inference.py
 
 
@@ -135,7 +135,7 @@ Cell-level protein expression predictions
 
 Spatial proteomic maps across tissue regions
 
-⚙️ Requirements
+##⚙️ Requirements
 
 PyTorch ≥ 2.0
 
@@ -155,7 +155,7 @@ SciPy
 
 See requirements.txt for the complete dependency list.
 
-🎯 Applications
+##🎯 Applications
 
 Virtual spatial proteomics reconstruction
 
