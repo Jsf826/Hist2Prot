@@ -1,22 +1,35 @@
-**AI-enabled Virtual Spatial Proteomics of Single-Cell Tumor Microenvironment from Histology**
+# Pan-cancer Virtual Spatial Proteomics of Single-cell Tumor Microenvironment from Histology
 
-We present an AI-enabled virtual spatial proteomics framework (Hist2Prot) designed to computationally generate single-cell–resolved spatial proteomic profiles directly from standard hematoxylin and eosin (H\&E) histopathology slides.
-The method integrates cell-level morphology, cell–cell spatial topology, and multi-task learning to reconstruct protein expression landscapes across the tumor microenvironment (TME).
+This repository provides the official implementation of **Hist2Prot**, an AI-enabled virtual spatial proteomics framework that computationally reconstructs **single-cell–resolved spatial protein expression profiles** directly from standard hematoxylin and eosin (H&E) histopathology slides.
 
-**Framework Overview**  
-<div align="center">
+Hist2Prot integrates **cell-level morphological representations**, **cell–cell spatial topology**, and **multi-task learning** to infer high-dimensional protein expression landscapes across the tumor microenvironment (TME).
+
+---
+
+## 🔬 Framework Overview
+
+<p align="center">
   <img src="Figures/Figure1.svg" width="80%">
-</div>
+</p>
 
+- Operates at the **single-cell level**
+- Inputs:
+  - H&E histopathology images
+  - Precomputed cell segmentation masks
+- Outputs:
+  - Spatially resolved, cell-level protein expression profiles
 
-**Repository Structure**
+---
 
-Histo2Prot  
-├── DataProcess.py       
-├── model.py             
-├── train.py    
-├── inference.py    
-├── requirements.txt   
+## 📁 Repository Structure
+
+```text
+Histo2Prot/
+├── DataProcess.py        # Data preprocessing and feature construction
+├── model.py              # Hist2Prot model architecture
+├── train.py              # Model training pipeline
+├── inference.py          # Inference on unseen H&E slides
+├── requirements.txt      # Dependency list
 └── README.md
 
 
