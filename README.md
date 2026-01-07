@@ -36,7 +36,7 @@ Histo2Prot/
 
 **Hardware:**
 
-* NVIDIA GPU (Recommended) with CUDA support for PyTorch Lightning acceleration.
+* NVIDIA A6000 GPU (*8) with CUDA support for PyTorch Lightning acceleration.
 
 **Software:**
 
@@ -86,7 +86,6 @@ After obtaining the segmentation results (from Step 0), organize your data and r
     * **Tissue processing:** Performs automatic tissue detection on whole-slide images and tiles them into non-overlapping **20× patches**.
     * **Tile filtering:** Removes background-dominated tiles and excludes low-information or artifact-prone regions.
     * **Final dataset:** Constructs paired H&E patches with corresponding single-cell protein expression profiles, topology_features, neighbor_labels and tissue type.
-    * 
 
 ## Step 3: Train Histo2Prot
 * **Install Dependencies:**
