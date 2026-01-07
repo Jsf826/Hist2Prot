@@ -22,7 +22,7 @@ Hist2Prot integrates **cell-level morphological representations**, **cell–cell
 ---
 
 ## 📁 Repository Structure
-
+`
 Histo2Prot/
 ├── DataProcess.py        # Data preprocessing and feature construction
 ├── model.py              # Hist2Prot model architecture
@@ -30,7 +30,7 @@ Histo2Prot/
 ├── inference.py          # Inference on unseen H&E slides
 ├── requirements.txt      # Dependency list
 └── README.md
-
+`
 
 ## Dependencies:
 
