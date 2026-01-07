@@ -42,7 +42,7 @@ Histo2Prot/
 
 * Python (3.8+), PyTorch (≥ 2.0), TorchVision
 
-## Step 1: WSI Segmentation (External)
+## Step 1: WSI Segmentation
 
 Segmenting the Whole Slide Images (WSIs) to obtain nuclei masks.
 
