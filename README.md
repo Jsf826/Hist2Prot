@@ -9,7 +9,7 @@ Hist2Prot integrates **cell-level morphological representations**, **cell–cell
 ## 🔬 Framework Overview
 
 <p align="center">
-  <img src="Figures/Figure1.svg" width="80%">
+  <img src="Figures/Figure1.svg" width="70%">
 </p>
 
 - Operates at the **single-cell level**
