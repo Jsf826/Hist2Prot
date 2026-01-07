@@ -32,12 +32,6 @@ Histo2Prot/
 └── README.md
 
 
-Markdown
-
-# Histo2Prot: AI-driven Single-cell Spatial Proteomics from Large-scale Whole-slide Images
-
-> Official Implementation of the paper "AI-driven Single-cell Spatial Proteomics from Large-scale Whole-slide Images".
-
 ## Dependencies:
 
 **Hardware:**
@@ -48,23 +42,7 @@ Markdown
 
 * Python (3.8+), PyTorch (≥ 2.0), TorchVision
 
-**Additional Python Libraries:**
 
-* numpy, pandas, scipy, scikit-learn
-* **Scanpy** (https://github.com/scverse/scanpy)
-* **Squidpy** (https://github.com/scverse/squidpy)
-* See `requirements.txt` for the complete dependency list.
-
-## Repository Structure
-
-```text
-Histo2Prot/
-├── DataProcess.py        # Data preprocessing and feature construction
-├── model.py              # Histo2Prot model architecture
-├── train.py              # Model training pipeline
-├── inference.py          # Inference on unseen H&E slides
-├── requirements.txt      # Dependency list
-└── README.md
 Step 1: Data Preparation and Preprocessing
 Input Data Organization:
 
