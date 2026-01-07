@@ -22,7 +22,7 @@ Hist2Prot integrates **cell-level morphological representations**, **cell–cell
 ---
 
 ## 📁 Repository Structure
-`
+```
 Histo2Prot/
 ├── DataProcess.py        # Data preprocessing and feature construction
 ├── model.py              # Hist2Prot model architecture
@@ -30,7 +30,7 @@ Histo2Prot/
 ├── inference.py          # Inference on unseen H&E slides
 ├── requirements.txt      # Dependency list
 └── README.md
-`
+```
 
 ## Dependencies:
 
@@ -66,7 +66,7 @@ Tile filtering: Removal of background-dominated tiles and exclusion of low-infor
 
 Final dataset: Constructs paired H&E patches with corresponding single-cell protein expression profiles.
 
-Step 2: Train Histo2Prot
+## Step 2: Train Histo2Prot
 Install Dependencies:
 
 Bash
@@ -86,9 +86,10 @@ Outputs: Trained model checkpoints, training loss curves, and hyperparameter con
 Step 3: Inference
 Run Inference: Apply the trained model to unseen H&E slides.
 
-Bash
+`Bash
 
 python inference.py
+`
 Model loading: Automatically loads trained Histo2Prot weights.
 
 Inputs: H&E image patches and corresponding segmentation masks.
