@@ -1,6 +1,6 @@
 #	AI-enabled Pan-cancer Spatial Protein Profiles of Single-cell Tumor Microenvironment from Histology
 
-This repository provides the official implementation of **Hist2Prot**, an AI-enabled virtual spatial proteomics framework that computationally reconstructs **single-cell–resolved spatial protein expression profiles** directly from standard hematoxylin and eosin (H&E) histopathology slides.
+This repository provides the official implementation of **Hist2Prot**, an AI-enabled framework that predicts pan-cancer single-cell–resolved spatial proteomic profiles directly from standard hematoxylin and eosin (H&E) histopathology slides via biologically informed multi-task supervision.
 
 Hist2Prot integrates **cell-level morphological representations**, **cell–cell spatial topology**, and **multi-task learning** to infer high-dimensional protein expression landscapes across the tumor microenvironment (TME).
 
