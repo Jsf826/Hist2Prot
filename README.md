@@ -85,7 +85,7 @@ python train.py --data_root {data_root} [optional args]
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `--data_root` | required | Data root directory |
-| `--protein_dim` | 15 | Number of proteins (must match `protein_*` columns in CSV) |
+| `--protein_dim` | 18 | Number of proteins (must match `protein_*` columns in CSV) |
 | `--epochs` | 200 | Max training epochs |
 | `--batch_size` | 1024 | Batch size |
 | `--patience` | 15 | Early-stopping patience |
