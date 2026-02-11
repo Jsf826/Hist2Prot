@@ -91,7 +91,7 @@ python train.py --data_root {data_root} [optional args]
 | `--patience` | 15 | Early-stopping patience |
 | `--num_workers` | 0 | DataLoader workers (use 0 on Windows if needed) |
 
-Example (18 proteins):
+Example:
 
 ```bash
 python train.py --data_root demo_data --protein_dim 18 --epochs 200 --batch_size 1024
