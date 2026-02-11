@@ -2,7 +2,9 @@
 
 Hist2Prot is a deep learning framework for inferring single-cell–resolved spatial proteomic profiles from routine whole-slide histopathology (H&E) images. The method integrates cell-level morphology, cell–cell spatial topology, and multi-task learning to reconstruct protein expression landscapes across the tumor microenvironment (TME).
 
-![img.png](img.png)
+<p align="center">
+  <img src="Figures/Figure1.svg" width="70%">
+</p>
 
 ---
 
