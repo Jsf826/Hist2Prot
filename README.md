@@ -114,7 +114,7 @@ python inference.py --data_root {data_root} [optional args]
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `--data_root` | required | Data root directory |
-| `--protein_dim` | 15 | Must match training |
+| `--protein_dim` | 18 | Must match training |
 | `--model_path` | out/best_model.pth | Model path relative to data_root |
 | `--save_dir` | inference | Output directory for predictions (relative to data_root) |
 
