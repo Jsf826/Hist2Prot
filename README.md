@@ -240,15 +240,3 @@ conda run -n pytorch_ST python inference.py \
   --cell_image_mode mask \
   --gpu 0
 ```
-
-## Evaluation
-
-The implementation reports:
-
-- **PCC**: Pearson correlation between predicted and measured protein
-  expression, computed per protein over valid cells and then averaged.
-- **SSIM**: structural similarity after rasterizing cell-level predictions and
-  targets into patch-level spatial maps.
-
-Model selection and early stopping use validation PCC as the primary metric.
-
