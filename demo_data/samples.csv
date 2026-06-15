@@ -1,0 +1,3 @@
+sample_id,image_path,cell_mask_path,nucleus_mask_path,csv_path,height,width
+A02,E:\SpatialTranscriptome\code\Hist2Prot-main\Row data\HE_mask\A02\A02_HE.ome.tiff,E:\SpatialTranscriptome\code\Hist2Prot-main\Row data\HE_mask\A02\mask\nuclei_exp.npy,E:\SpatialTranscriptome\code\Hist2Prot-main\Row data\HE_mask\A02\mask\nuclei.npy,E:\SpatialTranscriptome\code\Hist2Prot-main\demo_data\Process\csv\A02.csv,35200,34816
+B02,E:\SpatialTranscriptome\code\Hist2Prot-main\Row data\HE_mask\B02\B02_HE.ome.tiff,E:\SpatialTranscriptome\code\Hist2Prot-main\Row data\HE_mask\B02\mask\nuclei_exp.npy,E:\SpatialTranscriptome\code\Hist2Prot-main\Row data\HE_mask\B02\mask\nuclei.npy,E:\SpatialTranscriptome\code\Hist2Prot-main\demo_data\Process\csv\B02.csv,35200,34816
