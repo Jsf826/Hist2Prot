@@ -101,22 +101,6 @@ demo_data/
 `-- test_samples.txt
 ```
 
-### Dataset partitioning
-
-Training, validation, and test WSIs are assigned in one CSV file:
-
-```csv
-sample_id,split
-A01,train
-A02,train
-B01,val
-C01,test
-```
-
-Each `sample_id` must appear exactly once and must be assigned to `train`,
-`val`, or `test`. All patches and cells from the same WSI remain in the same
-split. The preprocessing step rejects duplicated, missing, or unknown samples.
-
 ### Protein normalization and outlier cells
 
 Protein-specific thresholds are fitted using training cells only:
