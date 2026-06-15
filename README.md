@@ -32,29 +32,19 @@ H&E WSI + cell mask + single-cell table
     single-cell protein prediction
 ```
 
-The topology branch uses only spatial geometry:
-
-- number of neighboring cells;
-- mean neighbor distance;
-- nearest-neighbor distance;
-- local cell density.
-
-Cell-type and tissue-region labels are not used as topology inputs. They can
-only be enabled as auxiliary supervision.
-
 ## Repository structure
 
 ```text
 .
-├── Data_Process.py       # WSI metadata, cell table, normalization, and splits
-├── utils_dataloader.py   # Dynamic patch reading and cell feature extraction
-├── Model.py              # CNN, GCN, attention fusion, and prediction heads
-├── train.py              # Training and validation
-├── inference.py          # Test-time prediction and evaluation
-├── metrics.py            # PCC and SSIM metrics
-├── requirements.txt
-├── Row data/             # Example raw input
-└── demo_data/            # Default processed-data and output root
+|-- Data_Process.py       # Data preprocessing and dataset splits
+|-- utils_dataloader.py   # Patch reading and cell feature extraction
+|-- Model.py              # Model architecture
+|-- train.py              # Training and validation
+|-- inference.py          # Inference and evaluation
+|-- metrics.py            # PCC and SSIM metrics
+|-- requirements.txt
+|-- Row data/             # Example raw input
+`-- demo_data/            # Processed data and outputs
 ```
 
 ## Installation
@@ -68,28 +58,26 @@ conda activate pytorch_ST
 pip install -r requirements.txt
 ```
 
-All examples below assume that commands are run from the repository root.
-
 ## Input data
 
 The expected raw-data layout is:
 
 ```text
 Row data/
-├── h5_files/
-│   ├── A02_feature_matrix.h5
-│   └── B02_feature_matrix.h5
-└── HE_mask/
-    ├── A02/
-    │   ├── A02_HE.ome.tiff
-    │   └── mask/
-    │       ├── nuclei.npy
-    │       └── nuclei_exp.npy
-    └── B02/
-        ├── B02_HE.ome.tiff
-        └── mask/
-            ├── nuclei.npy
-            └── nuclei_exp.npy
+|-- h5_files/
+|   |-- A02_feature_matrix.h5
+|   `-- B02_feature_matrix.h5
+`-- HE_mask/
+    |-- A02/
+    |   |-- A02_HE.ome.tiff
+    |   `-- mask/
+    |       |-- nuclei.npy
+    |       `-- nuclei_exp.npy
+    `-- B02/
+        |-- B02_HE.ome.tiff
+        `-- mask/
+            |-- nuclei.npy
+            `-- nuclei_exp.npy
 ```
 
 Each feature matrix is read with `anndata.read_h5ad` or
@@ -100,18 +88,6 @@ Each feature matrix is read with `anndata.read_h5ad` or
 | `cell_id` | Unique cell identifier |
 | `cell_x`, `cell_y` | Cell centroid coordinates in WSI pixel space |
 | `*_intensity_mean` | Protein-expression measurements |
-
-The following control/staining channels are excluded:
-
-```text
-MsIgG1_intensity_mean
-MsIgG2a_intensity_mean
-cytoplasmicstain_intensity_mean
-nuclearstain_intensity_mean
-```
-
-`nuclei.npy` stores nuclear instances. `nuclei_exp.npy` stores expanded cell
-instances and is used by the mask-based cell-image extraction mode.
 
 ## Data preprocessing
 
@@ -130,21 +106,18 @@ The processed dataset is written to:
 
 ```text
 demo_data/
-├── Process/
-│   ├── samples.csv
-│   ├── metadata.json
-│   ├── protein_norm.json
-│   ├── csv/
-│   │   ├── A02.csv
-│   │   └── B02.csv
-│   └── patches/
-│       ├── all_patches.csv
-│       ├── train_patches.csv
-│       ├── val_patches.csv
-│       └── test_patches.csv
-├── train_samples.txt
-├── val_samples.txt
-└── test_samples.txt
+|-- Process/
+|   |-- samples.csv
+|   |-- metadata.json
+|   |-- protein_norm.json
+|   |-- csv/
+|   `-- patches/
+|       |-- train_patches.csv
+|       |-- val_patches.csv
+|       `-- test_patches.csv
+|-- train_samples.txt
+|-- val_samples.txt
+`-- test_samples.txt
 ```
 
 ### Dataset partitioning
@@ -156,8 +129,7 @@ WSIs are ordered by their feature-matrix filenames.
 - All patches from subsequent WSI(s) are assigned to the test set.
 
 For the provided example, `A02` supplies training and validation patches, while
-`B02` is retained as an independent test WSI. No patch from the test WSI is
-used for training or validation.
+`B02` is retained as an independent test WSI.
 
 ### Protein normalization and outlier cells
 
@@ -184,16 +156,7 @@ To disable protein normalization entirely:
 conda run -n pytorch_ST python Data_Process.py --no_normalize_protein
 ```
 
-Normalization thresholds and filtering counts are recorded in
-`demo_data/Process/protein_norm.json`.
-
 ## Model
-
-For each patch, the model receives:
-
-- cell-centered RGB image tensors;
-- four geometry-derived topology features per cell;
-- a fixed-radius cell adjacency matrix.
 
 The morphology CNN and topology GCN produce cell-level representations. An
 attention module fuses both branches before protein regression. Optional
@@ -205,9 +168,6 @@ Cell images can be extracted in two ways:
 |---|---|
 | `crop` | Use a square RGB crop centered on each cell coordinate |
 | `mask` | Use the same crop but retain only the cell instance from `nuclei_exp.npy` |
-
-If a CSV `cell_id` does not match the instance-mask label, mask mode uses the
-instance label at the cell centroid.
 
 Macenko stain normalization can optionally be applied dynamically after
 reading each WSI patch.
@@ -231,12 +191,9 @@ written under `demo_data/out2/` by default:
 
 ```text
 demo_data/out2/
-├── best_model.pth
-└── hparam.yaml
+|-- best_model.pth
+`-- hparam.yaml
 ```
-
-The final training summary reports the epoch, PCC, SSIM, and loss associated
-with the best validation PCC.
 
 ### Device selection
 
@@ -251,17 +208,11 @@ conda run -n pytorch_ST python train.py --gpus 0,1,2
 conda run -n pytorch_ST python train.py --gpu -1
 ```
 
-Invalid or unavailable GPU identifiers are ignored. If no requested GPU is
-available, execution falls back to CPU and prints the selected device.
-
 ### Optional stain normalization
 
 ```bash
 conda run -n pytorch_ST python train.py --stain_norm macenko
 ```
-
-Stain normalization is performed dynamically by the Dataset and increases
-data-loading time.
 
 ### Optional auxiliary tasks
 
@@ -291,9 +242,6 @@ Auxiliary labels are read from one CSV per WSI, using
 | Tissue region | `region_type_id`, `region_type`, `tissue_type_id`, or `tissue_type` |
 | Neighborhood | `neighbor_label`, `neighbor_type_id`, `neighbor_type`, or `neighborhood_label` |
 
-Use `--aux_label_dir` and `--aux_label_suffix` to change the lookup location
-and filename suffix.
-
 ## Inference
 
 Run inference on the held-out test WSI:
@@ -307,15 +255,12 @@ conda run -n pytorch_ST python inference.py \
   --gpu 0
 ```
 
-Use the same `cell_image_mode`, stain-normalization setting, model dimensions,
-and auxiliary-head dimensions used during training.
-
 Inference reports PCC and SSIM by default and writes:
 
 ```text
 demo_data/inference/
-├── {sample_id}_test_pred.npz
-└── test_metrics.npz
+|-- {sample_id}_test_pred.npz
+`-- test_metrics.npz
 ```
 
 Each prediction archive contains:
@@ -337,9 +282,6 @@ Disable evaluation when ground-truth proteins are unavailable:
 conda run -n pytorch_ST python inference.py --no_eval
 ```
 
-Multi-GPU and CPU inference use the same `--gpus` and `--gpu -1` options as
-training.
-
 ## Evaluation
 
 The implementation reports:
@@ -350,20 +292,6 @@ The implementation reports:
   targets into patch-level spatial maps.
 
 Model selection and early stopping use validation PCC as the primary metric.
-
-## Reproducibility notes
-
-- Protein names and ordering are stored in `Process/metadata.json`.
-- Protein-normalization parameters are fitted on training cells only.
-- Test WSIs are isolated from training and validation.
-- Random seeds are configurable in preprocessing and training.
-- WSI files are read from their original locations and are not copied into the
-  processed dataset.
-- Dynamic Macenko normalization and mask-based extraction can substantially
-  increase data-loading time.
-- The default outlier rule removes a cell when any measured protein is outside
-  its training-derived percentile interval; this is intentionally strict and
-  should be reported when used.
 
 ## Citation
 
