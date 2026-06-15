@@ -58,6 +58,7 @@ conda activate pytorch_ST
 pip install -r requirements.txt
 ```
 
+
 Each feature matrix is read with `anndata.read_h5ad` or
 `scanpy.read_h5ad`. Its `obs` table must contain:
 
@@ -75,6 +76,7 @@ Run preprocessing with:
 conda run -n pytorch_ST python Data_Process.py \
   --raw_root "Row data" \
   --out_folder "demo_data" \
+  --split_csv "sample_splits.csv" \
   --patch_size 256 \
   --stride 256 \
   --min_cells 40
@@ -86,6 +88,7 @@ The processed dataset is written to:
 demo_data/
 |-- Process/
 |   |-- samples.csv
+|   |-- sample_splits.csv
 |   |-- metadata.json
 |   |-- protein_norm.json
 |   |-- csv/
@@ -100,14 +103,19 @@ demo_data/
 
 ### Dataset partitioning
 
-WSIs are ordered by their feature-matrix filenames.
+Training, validation, and test WSIs are assigned in one CSV file:
 
-- Patches from the first WSI are randomly divided into training and validation
-  sets using a 70:30 split by default.
-- All patches from subsequent WSI(s) are assigned to the test set.
+```csv
+sample_id,split
+A01,train
+A02,train
+B01,val
+C01,test
+```
 
-For the provided example, `A02` supplies training and validation patches, while
-`B02` is retained as an independent test WSI.
+Each `sample_id` must appear exactly once and must be assigned to `train`,
+`val`, or `test`. All patches and cells from the same WSI remain in the same
+split. The preprocessing step rejects duplicated, missing, or unknown samples.
 
 ### Protein normalization and outlier cells
 
@@ -227,8 +235,20 @@ Run inference on the held-out test WSI:
 ```bash
 conda run -n pytorch_ST python inference.py \
   --data_root "demo_data" \
-  --model_path "out/best_model.pth" \
+  --model_path "out2/best_model.pth" \
   --split test \
   --cell_image_mode mask \
   --gpu 0
 ```
+
+## Evaluation
+
+The implementation reports:
+
+- **PCC**: Pearson correlation between predicted and measured protein
+  expression, computed per protein over valid cells and then averaged.
+- **SSIM**: structural similarity after rasterizing cell-level predictions and
+  targets into patch-level spatial maps.
+
+Model selection and early stopping use validation PCC as the primary metric.
+
