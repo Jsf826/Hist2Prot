@@ -153,33 +153,82 @@ def make_patch_rows(
     return rows
 
 
-def split_first_wsi_train_val_second_test(
-    patch_rows: List[Dict[str, object]],
+def load_sample_splits(
+    split_csv: str,
     sample_ids: List[str],
-    train_fraction: float,
-    seed: int,
+) -> Dict[str, str]:
+    split_path = Path(split_csv)
+    if not split_path.exists():
+        raise FileNotFoundError(f"Sample split CSV does not exist: {split_path}")
+
+    split_df = pd.read_csv(split_path, dtype=str)
+    required = {"sample_id", "split"}
+    missing_columns = required - set(split_df.columns)
+    if missing_columns:
+        raise ValueError(
+            f"Sample split CSV is missing required columns: {sorted(missing_columns)}"
+        )
+
+    split_df = split_df[["sample_id", "split"]].copy()
+    split_df["sample_id"] = split_df["sample_id"].str.strip()
+    split_df["split"] = split_df["split"].str.strip().str.lower()
+
+    if (
+        split_df[["sample_id", "split"]].isna().any(axis=None)
+        or split_df["sample_id"].eq("").any()
+        or split_df["split"].eq("").any()
+    ):
+        raise ValueError("Sample split CSV contains empty sample_id or split values.")
+    duplicated = split_df.loc[split_df["sample_id"].duplicated(keep=False), "sample_id"].unique()
+    if len(duplicated) > 0:
+        raise ValueError(
+            "Each sample_id must appear exactly once in the sample split CSV. "
+            f"Duplicated sample_id values: {duplicated.tolist()}"
+        )
+
+    valid_splits = {"train", "val", "test"}
+    invalid_splits = sorted(set(split_df["split"]) - valid_splits)
+    if invalid_splits:
+        raise ValueError(
+            f"Invalid split values: {invalid_splits}. Expected train, val, or test."
+        )
+
+    discovered = set(sample_ids)
+    configured = set(split_df["sample_id"])
+    missing_samples = sorted(discovered - configured)
+    unknown_samples = sorted(configured - discovered)
+    if missing_samples:
+        raise ValueError(f"Samples missing from the sample split CSV: {missing_samples}")
+    if unknown_samples:
+        raise ValueError(f"Unknown samples in the sample split CSV: {unknown_samples}")
+
+    split_map = dict(zip(split_df["sample_id"], split_df["split"]))
+    empty_splits = sorted(valid_splits - set(split_map.values()))
+    if empty_splits:
+        raise ValueError(
+            "The sample split CSV must contain at least one sample for each split. "
+            f"Missing split(s): {empty_splits}"
+        )
+    return split_map
+
+
+def split_patches_by_sample(
+    patch_rows: List[Dict[str, object]],
+    sample_splits: Dict[str, str],
 ) -> Dict[str, List[Dict[str, object]]]:
     splits = {"train": [], "val": [], "test": []}
-    if not sample_ids:
-        return splits
-
-    rng = random.Random(seed)
-    by_sample: Dict[str, List[Dict[str, object]]] = {s: [] for s in sample_ids}
     for row in patch_rows:
-        by_sample[str(row["sample_id"])].append(row)
-
-    first = sample_ids[0]
-    first_rows = by_sample.get(first, [])
-    rng.shuffle(first_rows)
-    n_train = int(round(len(first_rows) * train_fraction))
-    splits["train"].extend(first_rows[:n_train])
-    splits["val"].extend(first_rows[n_train:])
-
-    for sample_id in sample_ids[1:]:
-        splits["test"].extend(by_sample.get(sample_id, []))
+        sample_id = str(row["sample_id"])
+        splits[sample_splits[sample_id]].append(row)
 
     for rows in splits.values():
         rows.sort(key=lambda r: (str(r["sample_id"]), str(r["patch_id"])))
+    empty_splits = [split for split, rows in splits.items() if not rows]
+    if empty_splits:
+        raise ValueError(
+            "No patches remain for the following split(s): "
+            f"{empty_splits}. Check --min_cells and the assigned samples."
+        )
     return splits
 
 
@@ -295,10 +344,10 @@ def normalize_protein_csvs(
 def run_preprocess(
     raw_root: str,
     out_folder: str,
+    split_csv: str,
     patch_size: int = 256,
     stride: int = 256,
     min_cells: int = 1,
-    train_fraction: float = 0.7,
     seed: int = 2024,
     normalize_protein: bool = True,
     norm_lower: float = 2.5,
@@ -355,9 +404,10 @@ def run_preprocess(
             make_patch_rows(sample_id, df, height, width, patch_size, stride, min_cells)
         )
 
-    splits = split_first_wsi_train_val_second_test(
-        all_patch_rows, sample_ids, train_fraction=train_fraction, seed=seed
-    )
+    sample_splits = load_sample_splits(split_csv, sample_ids)
+    for sample_row in sample_rows:
+        sample_row["split"] = sample_splits[str(sample_row["sample_id"])]
+    splits = split_patches_by_sample(all_patch_rows, sample_splits)
 
     protein_norm = {"enabled": False}
     if normalize_protein:
@@ -392,11 +442,15 @@ def run_preprocess(
                         min_cells,
                     )
                 )
-            splits = split_first_wsi_train_val_second_test(
-                all_patch_rows, sample_ids, train_fraction=train_fraction, seed=seed
-            )
+            splits = split_patches_by_sample(all_patch_rows, sample_splits)
 
     pd.DataFrame(sample_rows).to_csv(proc_dir / "samples.csv", index=False)
+    pd.DataFrame(
+        {
+            "sample_id": sample_ids,
+            "split": [sample_splits[sample_id] for sample_id in sample_ids],
+        }
+    ).to_csv(proc_dir / "sample_splits.csv", index=False)
     patch_columns = ["patch_id", "sample_id", "x0", "y0", "x1", "y1", "n_cells"]
     pd.DataFrame(all_patch_rows, columns=patch_columns).to_csv(
         patch_dir / "all_patches.csv", index=False
@@ -414,7 +468,8 @@ def run_preprocess(
         "patch_size": patch_size,
         "stride": stride,
         "min_cells": min_cells,
-        "train_fraction_first_wsi": train_fraction,
+        "sample_split_csv": str(Path(split_csv).resolve()),
+        "sample_splits": sample_splits,
         "sample_order": sample_ids,
         "protein_names": protein_names,
         "protein_dim": len(protein_names),
@@ -424,6 +479,13 @@ def run_preprocess(
         json.dump(metadata, f, indent=2)
 
     print(f"Data processing done. Processed {len(sample_ids)} WSI(s), {len(all_patch_rows)} patch(es).")
+    split_sample_counts = {
+        split: sum(assigned_split == split for assigned_split in sample_splits.values())
+        for split in ("train", "val", "test")
+    }
+    split_patch_counts = {split: len(rows) for split, rows in splits.items()}
+    print(f"Sample splits: {split_sample_counts}")
+    print(f"Patch splits: {split_patch_counts}")
     print(f"Protein dim: {len(protein_names)}")
     if protein_norm.get("enabled"):
         print(
@@ -441,10 +503,15 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--raw_root", type=str, default="Row data")
     parser.add_argument("--out_folder", type=str, default="./demo_data")
+    parser.add_argument(
+        "--split_csv",
+        type=str,
+        required=True,
+        help="CSV with exactly one row per WSI and columns: sample_id, split.",
+    )
     parser.add_argument("--patch_size", type=int, default=256)
     parser.add_argument("--stride", type=int, default=256)
     parser.add_argument("--min_cells", type=int, default=40)
-    parser.add_argument("--train_fraction", type=float, default=0.7)
     parser.add_argument("--seed", type=int, default=2024)
     parser.add_argument("--normalize_protein", dest="normalize_protein", action="store_true", default=True)
     parser.add_argument("--no_normalize_protein", dest="normalize_protein", action="store_false")
@@ -462,10 +529,10 @@ if __name__ == "__main__":
     run_preprocess(
         raw_root=args.raw_root,
         out_folder=args.out_folder,
+        split_csv=args.split_csv,
         patch_size=args.patch_size,
         stride=args.stride,
         min_cells=args.min_cells,
-        train_fraction=args.train_fraction,
         seed=args.seed,
         normalize_protein=args.normalize_protein,
         norm_lower=args.norm_lower,
