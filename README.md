@@ -58,28 +58,6 @@ conda activate pytorch_ST
 pip install -r requirements.txt
 ```
 
-## Input data
-
-The expected raw-data layout is:
-
-```text
-Row data/
-|-- h5_files/
-|   |-- A02_feature_matrix.h5
-|   `-- B02_feature_matrix.h5
-`-- HE_mask/
-    |-- A02/
-    |   |-- A02_HE.ome.tiff
-    |   `-- mask/
-    |       |-- nuclei.npy
-    |       `-- nuclei_exp.npy
-    `-- B02/
-        |-- B02_HE.ome.tiff
-        `-- mask/
-            |-- nuclei.npy
-            `-- nuclei_exp.npy
-```
-
 Each feature matrix is read with `anndata.read_h5ad` or
 `scanpy.read_h5ad`. Its `obs` table must contain:
 
