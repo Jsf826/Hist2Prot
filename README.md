@@ -227,7 +227,7 @@ Run inference on the held-out test WSI:
 ```bash
 conda run -n pytorch_ST python inference.py \
   --data_root "demo_data" \
-  --model_path "out2/best_model.pth" \
+  --model_path "out/best_model.pth" \
   --split test \
   --cell_image_mode mask \
   --gpu 0
