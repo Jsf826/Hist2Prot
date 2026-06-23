@@ -227,6 +227,6 @@ conda run -n pytorch_ST python inference.py \
 
 ## License
 
-This project is licensed under the Creative Commons
+This project is licensed under the [Creative Commons
 Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
-license.
+license](https://creativecommons.org/licenses/by-nc-nd/4.0/).
