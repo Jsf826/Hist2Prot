@@ -224,3 +224,14 @@ conda run -n pytorch_ST python inference.py \
   --cell_image_mode mask \
   --gpu 0
 ```
+
+## Citation
+
+Citation information will be added with the associated publication. Until
+then, please cite the accompanying manuscript when using this implementation.
+
+## License
+
+This project is licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+license.
