@@ -1,1 +1,63 @@
-
+{
+  "dataset": {
+    "data_root": "data"
+  },
+  "preprocessing": {
+    "raw_root": "raw_data",
+    "out_folder": "data",
+    "split_csv": null,
+    "patch_size": 256,
+    "stride": 256,
+    "min_cells": 1,
+    "max_target_cells": 256,
+    "train_fraction": 0.7,
+    "split_seed": 2024,
+    "normalize_protein": true,
+    "norm_lower": 2.5,
+    "norm_upper": 97.5,
+    "norm_log1p": true,
+    "filter_outlier_cells": false
+  },
+  "model": {
+    "topo_dim": 4,
+    "protein_dim": null,
+    "hidden": 128,
+    "dropout": 0.2,
+    "num_cell_types": 8,
+    "num_tissue_types": 4,
+    "num_neighbor_types": 8
+  },
+  "data": {
+    "use_precomputed_zarr": true,
+    "zarr_root": "Process/zarr",
+    "zarr_cache_size": 4,
+    "max_cells": 256,
+    "cell_size": 32,
+    "neighbor_radius": 50.0,
+    "stain_norm": "none",
+    "cell_image_mode": "mask",
+    "num_workers": 0
+  },
+  "training": {
+    "out_dir": "out2",
+    "batch_size": 32,
+    "epochs": 500,
+    "lr": 0.0001,
+    "dropout": 0.2,
+    "save_every": 25,
+    "seed": 42,
+    "use_aux_tasks": true,
+    "use_cell_task": true,
+    "use_tissue_task": true,
+    "use_neighbor_task": true,
+    "lambda_cell": 0.3,
+    "lambda_tissue": 0.2,
+    "lambda_neighbor": 0.2
+  },
+  "precompute": {
+    "patches_per_store": 32
+  },
+  "evaluation": {
+    "metric_grid_size": 256
+  }
+}
