@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/1402768969.svg)](https://doi.org/10.5281/zenodo.23116845)
+[![DOI](https://zenodo.org/badge/1402768969.svg)](https://zenodo.org/records/23116846)
 
 # Hist2Prot
 
